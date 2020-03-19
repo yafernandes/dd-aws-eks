@@ -1,0 +1,50 @@
+datadog:
+  apiKeyExistingSecret: dd
+  tag:
+    env: eks
+  apm:
+    enabled: true
+  logs:
+    enabled: true
+    containerCollectAll: true
+  processAgent:
+    enabled: true
+  systemProbe:
+    enabled: true
+    seccomp: "runtime/default"
+  clusterChecks:
+    enabled: true
+  kubeStateMetricsEnabled: true
+  dogstatsd:
+    nonLocalTraffic: true
+agents:
+  enabled: true
+  rbac:
+    create: true
+clusterAgent:
+  enabled: true
+  rbac:
+    create: true
+  confd:
+    kube_controller_manager.yaml: |-
+      cluster_check: true
+      init_config:
+      instances:
+        - prometheus_url: https://kubernetes.default/metrics
+          ssl_ca_cert: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          bearer_token_auth: true
+    kube_scheduler.yaml: |-
+      cluster_check: true
+      init_config:
+      instances:
+        - prometheus_url: https://kubernetes.default/metrics
+          ssl_ca_cert: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          bearer_token_auth: true
+    kube_apiserver_metrics.yaml: |-
+      cluster_check: true
+      init_config:
+      instances:
+        - prometheus_url: https://kubernetes.default/metrics
+          ssl_ca_cert: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          bearer_token_auth: true
+
