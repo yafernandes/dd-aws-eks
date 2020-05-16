@@ -12,7 +12,7 @@ locals {
 resource "aws_eks_cluster" "cluster" {
   name     = local.cluster_name
   role_arn = aws_iam_role.eks_role.arn
-  version  = "1.15"
+  version  = "1.16"
 
   vpc_config {
     subnet_ids = aws_subnet.main[*].id
@@ -32,9 +32,9 @@ resource "aws_eks_node_group" "main" {
   instance_types  = ["t3a.medium"]
 
   scaling_config {
-    desired_size = 1
+    desired_size = 3
     max_size     = 3
-    min_size     = 1
+    min_size     = 3
   }
 
   depends_on = [

@@ -8,3 +8,6 @@ kubectl create ns fargate
 
 kubectl create secret generic dd --from-env-file=secrets.txt -n fargate
 
+kubectl apply -f rbac.yaml
+
+kubectl apply -f app-java.yaml

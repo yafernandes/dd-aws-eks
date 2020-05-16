@@ -1,7 +1,5 @@
 datadog:
   apiKeyExistingSecret: dd
-  tag:
-    env: eks
   apm:
     enabled: true
   logs:
@@ -9,22 +7,30 @@ datadog:
     containerCollectAll: true
   processAgent:
     enabled: true
+    processCollection: true
   systemProbe:
     enabled: true
-    seccomp: "runtime/default"
   clusterChecks:
     enabled: true
   kubeStateMetricsEnabled: true
   dogstatsd:
     nonLocalTraffic: true
+    useHostPort: true
+  env:
+    - name: DD_ENV
+      value: "lab"
 agents:
   enabled: true
   rbac:
     create: true
+  podAnnotations:
+    sidecar.istio.io/inject: "false"
 clusterAgent:
   enabled: true
   rbac:
     create: true
+  podAnnotations:
+    sidecar.istio.io/inject: "false"
   confd:
     kube_controller_manager.yaml: |-
       cluster_check: true
@@ -47,4 +53,3 @@ clusterAgent:
         - prometheus_url: https://kubernetes.default/metrics
           ssl_ca_cert: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
           bearer_token_auth: true
-
