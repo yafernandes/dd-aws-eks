@@ -1,5 +1,8 @@
 datadog:
-  apiKeyExistingSecret: dd
+  clusterName: alexf-lab
+  apiKeyExistingSecret: datadog-keys
+  orchestratorExplorer:
+    enabled: true
   apm:
     enabled: true
   logs:
@@ -23,14 +26,16 @@ agents:
   enabled: true
   rbac:
     create: true
-  podAnnotations:
-    sidecar.istio.io/inject: "false"
 clusterAgent:
   enabled: true
+  admissionController:
+    enabled: true
+    mutateUnlabelled: true
   rbac:
     create: true
-  podAnnotations:
-    sidecar.istio.io/inject: "false"
+  env:
+    - name: DD_ENV
+      value: "lab"
   confd:
     kube_controller_manager.yaml: |-
       cluster_check: true
@@ -51,5 +56,13 @@ clusterAgent:
       init_config:
       instances:
         - prometheus_url: https://kubernetes.default/metrics
+          ssl_ca_cert: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+          bearer_token_auth: true
+    etcd.yaml: |-
+      cluster_check: true
+      init_config:
+      instances:
+        - prometheus_url: https://kubernetes.default/metrics
+          use_preview: true
           ssl_ca_cert: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
           bearer_token_auth: true
